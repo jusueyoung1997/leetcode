@@ -18,3 +18,55 @@ func TestMincostTickets(t *testing.T) {
 	}
 
 }
+
+func TestLongestValidParentheses(t *testing.T) {
+	if longestValidParentheses(")()())") != 4 {
+		t.Errorf("expect 4 but get %d", longestValidParentheses(")()())"))
+	}
+
+	if longestValidParentheses("") != 0 {
+		t.Errorf("expect 0 but get %d", longestValidParentheses(""))
+	}
+
+	if longestValidParentheses("(()") != 2 {
+		t.Errorf("expect 2 but get %d", longestValidParentheses("(()"))
+	}
+
+	if longestValidParentheses("(()))))))((()))))())))()))))))))))()") != 6 {
+		t.Errorf("expect 2 but get %d", longestValidParentheses("(()))))))((()))))())))()))))))))))()"))
+	}
+}
+
+func TestIsMatch(t *testing.T) {
+	if !isMatch("asdfssssvb", "a.dfs*vb") {
+		t.Errorf("expect true but false")
+	}
+
+	if !isMatch("asdfssssvb", "a.dfs*.*vb") {
+		t.Errorf("expect true but false")
+	}
+
+	if !isMatch("asdfssssvb", "a.dfs*b*v.") {
+		t.Errorf("expect true but false")
+	}
+
+	if !isMatch("asdfssssvb", "a.dfs*b*v.*") {
+		t.Errorf("expect true but false")
+	}
+
+	if isMatch("asdfssssvb", "a.dfs*b*v*") {
+		t.Errorf("expect false but true")
+	}
+
+	if !isMatch("aaaaaaa", "a*") {
+		t.Errorf("expect true but false")
+	}
+
+	if !isMatch("ab", ".*") {
+		t.Errorf("expect true but false")
+	}
+
+	if !isMatch("aab", "c*a*b") {
+		t.Errorf("expect true but false")
+	}
+}

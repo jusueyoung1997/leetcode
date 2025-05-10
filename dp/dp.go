@@ -45,3 +45,57 @@ func mincostTickets(days []int, costs []int) int {
 	}
 	return dp[n]
 }
+
+// 32. 最长有效括号
+func longestValidParentheses(s string) int {
+	n := len(s)
+	dp, ans := make([]int, n+1), 0
+
+	for i, c := range s {
+		if c == '(' {
+			dp[i+1] = 0
+			continue
+		}
+
+		l := i - dp[i] - 1
+		if l < 0 || s[l] == ')' {
+			dp[i+1] = 0
+			continue
+		}
+
+		dp[i+1] = dp[i] + 2
+		if l-1 >= 0 {
+			dp[i+1] += dp[l]
+		}
+
+		ans = max(ans, dp[i+1])
+	}
+	return ans
+}
+
+// 10. 正则表达式匹配
+func isMatch(s string, p string) bool {
+	n, m := len(p), len(s)
+	dp := make([][]bool, n+1)
+	for i := range n + 1 {
+		dp[i] = make([]bool, m+1)
+	}
+	dp[0][0] = true
+
+	for i := range len(p) {
+		if p[i] == '*' {
+			dp[i+1][0] = dp[i-1][0]
+		}
+
+		for j := range len(s) {
+			if p[i] == '*' {
+				dp[i+1][j+1] = dp[i-1][j+1] || ((s[j] == p[i-1] || p[i-1] == '.') && (dp[i+1][j] || dp[i][j]))
+			} else if p[i] == '.' {
+				dp[i+1][j+1] = dp[i][j]
+			} else {
+				dp[i+1][j+1] = (s[j] == p[i]) && dp[i][j]
+			}
+		}
+	}
+	return dp[n][m]
+}

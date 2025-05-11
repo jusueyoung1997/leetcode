@@ -99,3 +99,21 @@ func isMatch(s string, p string) bool {
 	}
 	return dp[n][m]
 }
+
+// 1143. 最长公共子序列
+func longestCommonSubsequence(text1 string, text2 string) int {
+	n, m := len(text1), len(text2)
+	dp := make([]int, m+1)
+	for i := 0; i < n; i++ {
+		leftup := dp[0]
+		for j := 0; j < m; j++ {
+			backup := dp[j+1]
+			if text2[j] == text1[i] {
+				dp[j+1] = max(leftup+1, dp[j+1])
+			}
+			dp[j+1] = max(dp[j+1], dp[j])
+			leftup = backup
+		}
+	}
+	return dp[m]
+}

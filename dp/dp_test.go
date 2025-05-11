@@ -70,3 +70,13 @@ func TestIsMatch(t *testing.T) {
 		t.Errorf("expect true but false")
 	}
 }
+
+func TestLongestCommonSubsequence(t *testing.T) {
+	if longestCommonSubsequence("abcde", "ace") != 3 {
+		t.Errorf("expect 3, but get %d", longestCommonSubsequence("abcde", "ace"))
+	}
+
+	if longestCommonSubsequence("abcdefsdas", "acefds") != 6 {
+		t.Errorf("expect 6, but get %d", longestCommonSubsequence("abcde", "ace"))
+	}
+}

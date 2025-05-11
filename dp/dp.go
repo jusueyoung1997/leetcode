@@ -1,6 +1,8 @@
 package dp
 
-import "math"
+import (
+	"math"
+)
 
 // 264. 丑数 II
 func nthUglyNumber(n int) int {
@@ -116,4 +118,57 @@ func longestCommonSubsequence(text1 string, text2 string) int {
 		}
 	}
 	return dp[m]
+}
+
+// 516. 最长回文子序列
+func longestPalindromeSubseq(s string) int {
+	n := len(s)
+	dp := make([]int, n+1)
+	for i := 0; i < n; i++ {
+		leftup := dp[0]
+		for j := 0; j < n; j++ {
+			backup := dp[j+1]
+			if s[i] == s[n-1-j] {
+				dp[j+1] = max(leftup+1, dp[j+1])
+			}
+			dp[j+1] = max(dp[j+1], dp[j])
+			leftup = backup
+		}
+	}
+	return dp[n]
+}
+
+// LCR 112. 矩阵中的最长递增路径
+func longestIncreasingPath(matrix [][]int) int {
+	n, m := len(matrix), len(matrix[0])
+	axis := []int{1, 0, -1, 0, 1}
+	dp := make([][]int, n)
+	for i := 0; i < n; i++ {
+		dp[i] = make([]int, m)
+	}
+
+	// 从(x, y)出发的最长路径
+	var dfs func(int, int) int
+	dfs = func(x, y int) int {
+		if dp[x][y] != 0 {
+			return dp[x][y]
+		}
+		dp[x][y] = 1
+		for i := 0; i < 4; i++ {
+			dx, dy := x+axis[i], y+axis[i+1]
+			if dx < 0 || dx >= n || dy < 0 || dy >= m || matrix[dx][dy] <= matrix[x][y] {
+				continue
+			}
+			dp[x][y] = max(dp[x][y], dfs(dx, dy)+1)
+		}
+		return dp[x][y]
+	}
+
+	ans := 0
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			ans = max(ans, dfs(i, j))
+		}
+	}
+	return ans
 }

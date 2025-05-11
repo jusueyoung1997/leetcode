@@ -80,3 +80,23 @@ func TestLongestCommonSubsequence(t *testing.T) {
 		t.Errorf("expect 6, but get %d", longestCommonSubsequence("abcde", "ace"))
 	}
 }
+
+func TestLongestPalindromeSubseq(t *testing.T) {
+	if longestPalindromeSubseq("bbbab") != 4 {
+		t.Errorf("expect 4, but get %d", longestPalindromeSubseq("bbbab"))
+	}
+
+	if longestPalindromeSubseq("bbbaaabb") != 7 {
+		t.Errorf("expect 7, but get %d", longestPalindromeSubseq("bbbaaabb"))
+	}
+}
+
+func TestLongestIncreasingPath(t *testing.T) {
+	if longestIncreasingPath([][]int{{9, 9, 4}, {6, 6, 8}, {2, 1, 1}}) != 4 {
+		t.Errorf("expect 4, but get %d", longestIncreasingPath([][]int{{9, 9, 4}, {6, 6, 8}, {2, 1, 1}}))
+	}
+
+	if longestIncreasingPath([][]int{{3, 4, 5}, {3, 2, 6}, {2, 2, 1}}) != 4 {
+		t.Errorf("expect 4, but get %d", longestIncreasingPath([][]int{{3, 4, 5}, {3, 2, 6}, {2, 2, 1}}))
+	}
+}

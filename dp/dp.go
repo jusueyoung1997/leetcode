@@ -172,3 +172,208 @@ func longestIncreasingPath(matrix [][]int) int {
 	}
 	return ans
 }
+
+// 256. 粉刷房子
+func minCost(costs [][]int) int {
+	dp0, dp1, dp2 := 0, 0, 0
+	for i := 0; i < len(costs); i++ {
+		s0 := min(dp1+costs[i][0], dp2+costs[i][0])
+		s1 := min(dp0+costs[i][1], dp2+costs[i][1])
+		s2 := min(dp0+costs[i][2], dp1+costs[i][2])
+		dp0, dp1, dp2 = s0, s1, s2
+	}
+	return min(min(dp0, dp1), dp2)
+}
+
+// 97. 交错字符串
+func isInterleave(s1 string, s2 string, s3 string) bool {
+	n, m := len(s1), len(s2)
+	dp := make([][]bool, n+1)
+	for i := 0; i < n+1; i++ {
+		dp[i] = make([]bool, m+1)
+	}
+	dp[0][0] = true
+
+	for i := 1; i < n+1; i++ {
+		dp[i][0] = s1[i-1] == s3[i-1] && dp[i-1][0]
+	}
+	for j := 1; j < m+1; j++ {
+		dp[0][j] = s2[j-1] == s3[j-1] && dp[0][j-1]
+	}
+
+	for i := 1; i < n+1; i++ {
+		for j := 1; j < m+1; j++ {
+			dp[i][j] = (s1[i-1] == s3[i+j-1] && dp[i-1][j]) || (s2[j-1] == s3[i+j-1] && dp[i][j-1])
+		}
+	}
+	return dp[n][m]
+}
+
+func predictTheWinner(nums []int) bool {
+
+	n := len(nums)
+	dp := make([][]int, n)
+	for i := range n {
+		dp[i] = make([]int, n)
+	}
+
+	for i := range n {
+		for j := range n {
+			dp[i][j] = -1
+		}
+	}
+
+	// [l, r]范围玩家1获取的最大分数
+	var dfs func(int, int) int
+	dfs = func(l, r int) int {
+		if dp[l][r] != -1 {
+			return dp[l][r]
+		}
+
+		if l == r {
+			dp[l][r] = nums[l]
+			return dp[l][r]
+		}
+		if l == r-1 {
+			dp[l][r] = max(nums[l], nums[r])
+			return dp[l][r]
+		}
+		pl := nums[l] + min(dfs(l+2, r), dfs(l+1, r-1))
+		pr := nums[r] + min(dfs(l+1, r-1), dfs(l, r-2))
+		dp[l][r] = max(pl, pr)
+		return dp[l][r]
+	}
+
+	player1 := dfs(0, n-1)
+	sum := 0
+	for _, num := range nums {
+		sum += num
+	}
+	return 2*player1 >= sum
+
+}
+
+// 312.戳气球
+func maxCoins(nums []int) int {
+	n := len(nums)
+	balloons := make([]int, n+2)
+	for i := range n {
+		balloons[i+1] = nums[i]
+	}
+	balloons[0], balloons[n+1] = 1, 1
+
+	dp := make([][]int, n+2)
+	for i := 0; i < n+2; i++ {
+		dp[i] = make([]int, n+2)
+	}
+	for i := 0; i < n+2; i++ {
+		for j := 0; j < n+2; j++ {
+			dp[i][j] = -1
+		}
+	}
+
+	// (l, r) 范围内戳气球最大分数
+	var dfs func(int, int) int
+	dfs = func(l, r int) int {
+		if dp[l][r] != -1 {
+			return dp[l][r]
+		}
+
+		if l+1 >= r {
+			dp[l][r] = 0
+			return dp[l][r]
+		}
+
+		ret := math.MinInt
+		for i := l + 1; i < r; i++ {
+			ret = max(ret, balloons[i]*balloons[l]*balloons[r]+dfs(l, i)+dfs(i, r))
+		}
+		dp[l][r] = ret
+		return dp[l][r]
+	}
+	return dfs(0, n+1)
+}
+
+// 1039.多边形三角剖分的最低得分
+func minScoreTriangulation(values []int) int {
+
+	n := len(values)
+	dp := make([][]int, n)
+	for i := range n {
+		dp[i] = make([]int, n)
+	}
+	for i := range n {
+		for j := range n {
+			dp[i][j] = -1
+		}
+	}
+
+	//[l, r]围成封闭多边形，可以取得的最大分数
+	var dfs func(int, int) int
+	dfs = func(l, r int) int {
+		if dp[l][r] != -1 {
+			return dp[l][r]
+		}
+
+		if l+2 > r {
+			dp[l][r] = 0
+			return dp[l][r]
+		}
+
+		ret := math.MaxInt
+		for i := l + 1; i < r; i++ {
+			ret = min(ret, values[l]*values[r]*values[i]+dfs(l, i)+dfs(i, r))
+		}
+		dp[l][r] = ret
+		return dp[l][r]
+	}
+
+	return dfs(0, n-1)
+}
+
+// 921.使括号有效的最少添加
+func minAddToMakeValid(s string) int {
+	n := len(s)
+	dp := make([][]int, n)
+	for i := range n {
+		dp[i] = make([]int, n)
+		for j := range n {
+			dp[i][j] = -1
+		}
+	}
+
+	var dfs func(int, int) int
+	dfs = func(l, r int) int {
+		if l > r {
+			return 0
+		}
+
+		if dp[l][r] != -1 {
+			return dp[l][r]
+		}
+		if l == r {
+			dp[l][r] = 1
+			return dp[l][r]
+		}
+
+		if s[l] == ')' {
+			dp[l][r] = 1 + dfs(l+1, r)
+			return dp[l][r]
+		}
+		if s[r] == '(' {
+			dp[l][r] = 1 + dfs(l, r-1)
+			return dp[l][r]
+		}
+
+		ret := 1 + dfs(l+1, r)
+		for i := l + 1; i <= r; i++ {
+			if s[i] == ')' {
+				ret = min(ret, dfs(l+1, i-1)+dfs(i+1, r))
+			}
+		}
+		dp[l][r] = ret
+		return ret
+	}
+
+	return dfs(0, n-1)
+}

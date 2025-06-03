@@ -100,3 +100,15 @@ func TestLongestIncreasingPath(t *testing.T) {
 		t.Errorf("expect 4, but get %d", longestIncreasingPath([][]int{{3, 4, 5}, {3, 2, 6}, {2, 2, 1}}))
 	}
 }
+
+func TestMinCost(t *testing.T) {
+	if minCost([][]int{{17, 2, 17}, {16, 16, 5}, {14, 3, 19}}) != 10 {
+		t.Errorf("expect 10, but get %d", minCost([][]int{{17, 2, 17}, {16, 16, 5}, {14, 3, 19}}))
+	}
+}
+
+func TestMinAddToMakeValid(t *testing.T) {
+	if minAddToMakeValid("())()())") != 2 {
+		t.Errorf("expect 10, but get %d", minAddToMakeValid("())()())"))
+	}
+}
